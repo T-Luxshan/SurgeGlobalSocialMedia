@@ -34,6 +34,15 @@ spring:
             - Path=/api/v1/auth/**,/forgotPassword/**
 
 
+        # user controller
+        - id: user-service-profile
+          uri: http://localhost:8090 # Backend auth service
+          predicates:
+            - Path=/api/v1/user
+          filter:
+            - AuthenticationFilter
+
+
 # Eureka client configuration
 eureka:
   client:
