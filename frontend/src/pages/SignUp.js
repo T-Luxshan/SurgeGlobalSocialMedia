@@ -13,17 +13,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-
-const defaultTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#E91C26",
-    },
-    secondary: {
-      main: "#EAE9E7",
-    },
-  },
-});
+import { register } from "../Services/AuthService";
 
 const SignUp = () => {
   const [logError, setLogError] = useState("");
@@ -36,10 +26,10 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const fullName = data.get("fullName"); // Get the full name from the form
-    const email = data.get("email");
-    const password = data.get("password");
+    let data = new FormData(event.currentTarget);
+    let fullName = data.get("fullName"); // Get the full name from the form
+    let email = data.get("email");
+    let password = data.get("password");
 
     let valid = true;
 
@@ -94,16 +84,31 @@ const SignUp = () => {
 
     if (valid) {
       console.log({ fullName, email, password });
-      // Add your API call or submission logic here
+
+      // Connect with backend
+      email = email.toLowerCase();
+      register(fullName, email, password)
+        .then((res) => {
+          console.log(res.data);
+          // Set the token in cookie (example)
+
+          document.cookie = `accessToken=${res.data.accessToken}; path=/;`;
+          document.cookie = `refreshToken=${res.data.refreshToken}; path=/;`;
+          // TODO: token handle and navigate.
+        })
+        .catch((e) => {
+          console.log("Registration failed.");
+          setLogError("Invalid Sign up, please try again");
+        });
     }
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <div>
       <Grid2
         container
         component="main"
-        sx={{ minHeight: "650px", backgroundColor: "#F5F5F5" }}
+        sx={{ minHeight: "100vh", backgroundColor: "#F5F5F5" }}
       >
         <CssBaseline />
 
@@ -152,17 +157,28 @@ const SignUp = () => {
           component={Paper}
           elevation={2}
           square
-          sx={{ minHeight: "650px", mt: "25px", mb: "50px" }}
+          sx={{
+            minHeight: "650px",
+            my: "100px",
+            px: 8,
+            // mb: "50px",
+            // border: '1px solid red',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
           <Box
             sx={{
-              my: 5,
-              mx: 8,
+              // my: 5,
+              mt: "-140px",
+              // mx: 8,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               backgroundColor: "white",
               maxHeight: "450px",
+              // border: '1px solid blue',
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
@@ -178,6 +194,25 @@ const SignUp = () => {
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
+              {logError && (
+                <Typography
+                  variant="subtitle2"
+                  gutterBottom
+                  color={"primary.darker"}
+                  backgroundColor={"primary.lighter"}
+                  sx={{
+                    mt: 0,
+                    mb: 0,
+                    pt: 1,
+                    pr: 2,
+                    pb: 1,
+                    pl: 2,
+                    borderRadius: 1,
+                  }}
+                >
+                  {logError}
+                </Typography>
+              )}
               <TextField
                 margin="normal"
                 required
@@ -254,7 +289,7 @@ const SignUp = () => {
           </Box>
         </Grid2>
       </Grid2>
-    </ThemeProvider>
+    </div>
   );
 };
 

@@ -13,6 +13,9 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { login } from "../Services/AuthService";
+import { GetCookie } from "../Functions/GetCookie";
+
 
 const defaultTheme = createTheme({
   palette: {
@@ -73,12 +76,26 @@ const Login = () => {
 
     if (valid) {
       console.log({ email, password });
-      // Proceed with form submission logic (e.g., API call)
+      login(email, password)
+        .then((res) => {
+          console.log(res.data);
+          setLogError("");
+          //  token handiling and navigation.
+          document.cookie = `accessToken=${res.data.accessToken}; path=/;`;
+          document.cookie = `refreshToken=${res.data.refreshToken}; path=/;`;
+        })
+        .catch((e) => {
+          console.log("Login failed");
+          setLogError("Invalid login, please try again");
+        });
+
+      
+
+      
     }
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
       <Grid2
         container
         component="main"
@@ -158,8 +175,8 @@ const Login = () => {
                 <Typography
                   variant="subtitle2"
                   gutterBottom
-                  color="#742F2F"
-                  backgroundColor="#F5F5F5"
+                  color={"primary.darker"}
+                  backgroundColor={"primary.lighter"}
                   sx={{
                     mt: 0,
                     mb: 0,
@@ -235,7 +252,6 @@ const Login = () => {
           </Box>
         </Grid2>
       </Grid2>
-    </ThemeProvider>
   );
 };
 
