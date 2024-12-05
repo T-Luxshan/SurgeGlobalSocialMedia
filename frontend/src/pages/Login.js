@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const defaultTheme = createTheme({
   palette: {
@@ -28,6 +29,8 @@ const Login = () => {
   const [logError, setLogError] = useState("");
   const [emailError, setEmailError] = useState(""); // For email validation
   const [passwordError, setPasswordError] = useState(""); // For password validation
+  const [capVal, setCapVal] = useState(null);
+  const [capError, setCapError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -53,11 +56,19 @@ const Login = () => {
     if (!password) {
       setPasswordError("Password is required");
       valid = false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long");
+    } else if (password.length < 5) {
+      setPasswordError("Password must be at least 5 characters long");
       valid = false;
     } else {
       setPasswordError("");
+    }
+
+    // reCAPTCHA Validation
+    if (!capVal) {
+      setCapError("Please check the reCAPTCHA");
+      valid = false;
+    } else {
+      setCapError("");
     }
 
     if (valid) {
@@ -118,7 +129,7 @@ const Login = () => {
           component={Paper}
           elevation={2}
           square
-          sx={{ height: "85vh", mt: "50px" }}
+          sx={{ minHeight: "300px", mt: "10px", mb: "10px" }}
         >
           <Box
             sx={{
@@ -186,22 +197,36 @@ const Login = () => {
                 error={Boolean(passwordError)}
                 helperText={passwordError} // Show validation message
               />
+
+              <ReCAPTCHA
+                sitekey={process.env.REACT_APP_SITE_KEY}
+                onChange={(val) => setCapVal(val)}
+              ></ReCAPTCHA>
+              {capError && (
+                <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                  {capError}
+                </Typography>
+              )}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 1, mb: 1, color: "white" }}
+                sx={{ mt: 3, mb: 1, color: "white" }}
               >
                 Sign In
               </Button>
-              <Grid2 container>
-                <Grid2 item xs>
+
+              <Grid2
+                container
+                sx={{ justifyContent: "space-between" }} // Distributes space between the items
+              >
+                <Grid2 item>
                   <Link href="/forgotpassword" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid2>
                 <Grid2 item>
-                  <Link href="/joinas" variant="body2">
+                  <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid2>

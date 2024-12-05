@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const defaultTheme = createTheme({
   palette: {
@@ -29,6 +30,8 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState("");
   const [nameError, setNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [capVal, setCapVal] = useState(null);
+  const [capError, setCapError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -69,11 +72,24 @@ const SignUp = () => {
     if (!password) {
       setPasswordError("Password is required");
       valid = false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long");
+    } else if (password.length < 5) {
+      setPasswordError("Password must be at least 5 characters long");
+      valid = false;
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      setPasswordError(
+        "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number"
+      );
       valid = false;
     } else {
       setPasswordError("");
+    }
+
+    // reCAPTCHA Validation
+    if (!capVal) {
+      setCapError("Please check the reCAPTCHA");
+      valid = false;
+    } else {
+      setCapError("");
     }
 
     if (valid) {
@@ -87,7 +103,7 @@ const SignUp = () => {
       <Grid2
         container
         component="main"
-        sx={{ height: "100vh", backgroundColor: "#F5F5F5" }}
+        sx={{ minHeight: "650px", backgroundColor: "#F5F5F5" }}
       >
         <CssBaseline />
 
@@ -136,7 +152,7 @@ const SignUp = () => {
           component={Paper}
           elevation={2}
           square
-          sx={{ minHeight: "500px", mt: "25px", mb: "50px" }}
+          sx={{ minHeight: "650px", mt: "25px", mb: "50px" }}
         >
           <Box
             sx={{
@@ -197,6 +213,17 @@ const SignUp = () => {
                 error={Boolean(passwordError)}
                 helperText={passwordError}
               />
+              <Box sx={{ mt: 1, mb: 2 }}>
+                <ReCAPTCHA
+                  sitekey={process.env.REACT_APP_SITE_KEY}
+                  onChange={(val) => setCapVal(val)}
+                ></ReCAPTCHA>
+              </Box>
+              {capError && (
+                <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                  {capError}
+                </Typography>
+              )}
               <Button
                 type="submit"
                 fullWidth
