@@ -24,6 +24,14 @@ public class UserService {
 
         ProfileImage profileImage = profileImageRepository.findByUser(user);
 
+        if(profileImage == null) {
+            return UserDetailDTO.builder()
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .profileUri(null)
+                    .build();
+        }
+
         return UserDetailDTO.builder()
                 .name(user.getName())
                 .email(user.getEmail())

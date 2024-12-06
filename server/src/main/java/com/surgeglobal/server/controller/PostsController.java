@@ -65,14 +65,18 @@ public class PostsController {
     }
 
     @PostMapping("/{id}/like")
-    public ResponseEntity<PostResponseDTO> addLike(@PathVariable Long id, @RequestBody LikeDTO userId) {
+    public ResponseEntity<PostResponseDTO> addLike(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
         Posts post = postsService.addLikeToPost(id, userId);
         PostResponseDTO postResponseDTO = convertToDTO(post);
         return ResponseEntity.ok(postResponseDTO);
     }
 
     @PostMapping("/{id}/unlike")
-    public ResponseEntity<PostResponseDTO> removeLike(@PathVariable Long id, @RequestBody LikeDTO userId) {
+    public ResponseEntity<PostResponseDTO> removeLike(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
         Posts post = postsService.removeLikeFromPost(id, userId);
         PostResponseDTO postResponseDTO = convertToDTO(post);
         return ResponseEntity.ok(postResponseDTO);

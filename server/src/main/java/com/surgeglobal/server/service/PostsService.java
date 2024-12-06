@@ -1,7 +1,6 @@
 package com.surgeglobal.server.service;
 
 
-import com.surgeglobal.server.dto.LikeDTO;
 import com.surgeglobal.server.dto.PostRequestDTO;
 import com.surgeglobal.server.entity.Posts;
 import com.surgeglobal.server.entity.User;
@@ -69,19 +68,19 @@ public class PostsService {
     }
 
     // Add a like to a post
-    public Posts addLikeToPost(Long postId, LikeDTO userId) {
+    public Posts addLikeToPost(Long postId, String userId) {
         Posts post = getPostById(postId);
-        if (!post.getLikeList().contains(userId.getUserId())) {
-            post.getLikeList().add(userId.getUserId());
+        if (!post.getLikeList().contains(userId)) {
+            post.getLikeList().add(userId);
             return postsRepository.save(post);
         }
         return post;
     }
 
     // Remove a like from a post
-    public Posts removeLikeFromPost(Long postId, LikeDTO userId) {
+    public Posts removeLikeFromPost(Long postId, String userId) {
         Posts post = getPostById(postId);
-        if (post.getLikeList().remove(userId.getUserId())) {
+        if (post.getLikeList().remove(userId)) {
             return postsRepository.save(post);
         }
         return post;
