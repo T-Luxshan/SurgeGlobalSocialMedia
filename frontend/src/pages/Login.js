@@ -83,6 +83,7 @@ const Login = () => {
           //  token handiling and navigation.
           document.cookie = `accessToken=${res.data.accessToken}; path=/;`;
           document.cookie = `refreshToken=${res.data.refreshToken}; path=/;`;
+          navigate("/post");
         })
         .catch((e) => {
           console.log("Login failed");
