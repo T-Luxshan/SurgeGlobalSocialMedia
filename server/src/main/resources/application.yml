@@ -1,0 +1,31 @@
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: SurgeSocialMedia
+  datasource:
+    url: jdbc:mysql://localhost:3306/social_media
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: luxshan.thuraisingam@gmail.com
+    password: oojo dozp dnkd ehnd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
