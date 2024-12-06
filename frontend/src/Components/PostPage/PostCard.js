@@ -9,9 +9,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { DateFormatter } from "../../Functions/DateFormatter";
 import { extractUsername } from "../../Functions/UsernameExtract";
 import user from "../../Data/User";
+import { disLikePost, likePost } from "../../Services/PostService";
 
 const PostCard = ({ post }) => {
-  console.log("pooo", post);
+  // console.log("pooo", post);
   const isUsernameInLikesList = (email, likesList) => {
     // setLikeCount(likesList.includes(email));
     return likesList.includes(email);
@@ -21,13 +22,27 @@ const PostCard = ({ post }) => {
     isUsernameInLikesList(user.email, post.likeList),
   );
   const [likeCount, setLikeCount] = useState(post.likeList.length);
-  const handleLike = () => {
+  const handleLike = (id) => {
     setLiked(!liked);
-    liked ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
+    // liked ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
+    liked ?  disLike(id) : addLike(id);
   };
+
+  const addLike = (id) => {
+    likePost(id)
+    .then(res=>console.log("Liked"))
+    .catch(e=>console.log("not Liked"))
+  }
+
+  const disLike = (id) => {
+    disLikePost(id)
+    .then(res=>console.log("Liked"))
+    .catch(e=>console.log("not Liked"))
+  }
+
   const postTime = post.dateCreated;
   const formattedDate = DateFormatter(postTime);
-  const username = extractUsername(post.auther);
+  const username = extractUsername(post.author);
   console.log(`Date, ${DateFormatter(postTime)}`);
   return (
     <div>

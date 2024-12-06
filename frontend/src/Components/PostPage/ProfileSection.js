@@ -40,6 +40,7 @@ const ProfileSection = () => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
+
   
 
   useEffect(() => {
@@ -111,8 +112,8 @@ const ProfileSection = () => {
         .then((url) => {
           setPreview(url); // Update profile URL state
           saveToDB(url); // Save to database
-          setIsLoading(false); // Stop the loading spinner
-          handleClose(); // Close the dialog after upload is completed
+          setIsLoading(false);
+          handleClose(); 
         })
         .catch((error) => {
           console.error("Error uploading profile:", error);
