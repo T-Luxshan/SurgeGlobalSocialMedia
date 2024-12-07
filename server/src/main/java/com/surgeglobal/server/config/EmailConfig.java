@@ -13,17 +13,17 @@ public class EmailConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com"); // SMTP host
-        mailSender.setPort(587); // Port for STARTTLS
-        mailSender.setUsername("luxshan.thuraisingam@gmail.com"); // Your email address
-        mailSender.setPassword("oojo dozp dnkd ehnd"); // Your email password
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+        mailSender.setUsername("luxshan.thuraisingam@gmail.com");
+        mailSender.setPassword("oojo dozp dnkd ehnd");
 
         // Set JavaMail properties for STARTTLS
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true"); // Enable STARTTLS
-        props.put("mail.smtp.starttls.required", "true"); // Ensure STARTTLS is required
-        props.put("mail.smtp.ssl.trust", "smtp.gmail.com"); // Trust Gmail's server
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.starttls.required", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         return mailSender;
     }

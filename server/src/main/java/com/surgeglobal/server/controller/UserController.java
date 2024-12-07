@@ -22,7 +22,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserDetails(userName));
     }
     @GetMapping("{email}")
-    public ResponseEntity<UserDTO> getUserFromEmailId(@PathVariable("email") String email){
+    public ResponseEntity<UserDetailDTO> getUserFromEmailId(@PathVariable("email") String email){
         return ResponseEntity.ok(userService.getUserFromEmailId(email));
     }
     @GetMapping("{email}/checkUserFound")
