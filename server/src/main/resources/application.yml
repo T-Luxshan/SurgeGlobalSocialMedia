@@ -21,11 +21,14 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${email}
-    password: ${email_psw}
+    username: luxshan.thuraisingam@gmail.com
+    password: oojo dozp dnkd ehnd
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+            required: true
+          ssl:
+              trust: smtp.gmail.com

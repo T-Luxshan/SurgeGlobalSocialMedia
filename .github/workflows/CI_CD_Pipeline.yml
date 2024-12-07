@@ -33,6 +33,7 @@ jobs:
         run: |
           echo "REACT_APP_SITE_KEY=${{ secrets.REACT_APP_SITE_KEY }}" >> frontend/.env
           echo "REACT_APP_SITE_SECRET=${{ secrets.REACT_APP_SITE_SECRET }}" >> frontend/.env
+          echo "FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}" >> frontend/.env
 
       - name: Run frontend tests
         working-directory: frontend
@@ -44,7 +45,7 @@ jobs:
         run: |
           npm run build
 
-  # Job 2: Backend (Spring Boot)
+   # Job 2: Backend (Spring Boot)
   backend:
     runs-on: ubuntu-latest
     needs: frontend  # Run this job after the frontend job completes
@@ -71,6 +72,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Use the appropriate Java version
+          distribution: 'temurin'
 
       # Set environment variables for DB connection and email (optional)
       - name: Set environment variables
@@ -92,14 +94,26 @@ jobs:
             sleep 5
           done
 
-      # Step to configure application.properties for DB connection
-      - name: Configure application.properties
+      # Step to configure application.yml for DB connection
+      - name: Configure application.yml
+        working-directory: server  # Adjust path if needed
         run: |
-          echo "spring.datasource.url=jdbc:mysql://localhost:3306/testdb" > src/main/resources/application.properties
-          echo "spring.datasource.username=root" >> src/main/resources/application.properties
-          echo "spring.datasource.password=root" >> src/main/resources/application.properties
-          echo "spring.jpa.hibernate.ddl-auto=update" >> src/main/resources/application.properties
+          echo "
+          spring:
+            datasource:
+              url: jdbc:mysql://localhost:3306/testdb
+              username: root
+              password: root
+            jpa:
+              hibernate:
+                ddl-auto: update
+          " > src/main/resources/application.yml
 
+    # Step to grant execute permissions for mvnw
+      - name: Grant execute permission to mvnw
+        working-directory: server
+        run: chmod +x ./mvnw
+        
       # Build backend (Spring Boot)
       - name: Build backend (Spring Boot)
         working-directory: server
@@ -111,3 +125,14 @@ jobs:
         working-directory: server
         run: |
           ./mvnw test
+
+
+      # Job 3: Deployment
+  deploy:
+    runs-on: ubuntu-latest
+    needs: backend
+    environment: staging  # Define a deployment environment
+  
+    steps:
+      - name: Simulate Deployment
+        run: echo "Deploying application to staging environment..."
