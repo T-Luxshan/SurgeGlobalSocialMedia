@@ -1,0 +1,109 @@
+name: CI/CD Pipeline for React + Spring Boot with Dockerized MySQL
+
+on:
+  pull_request:
+    branches:
+      - dev  # Trigger on pull requests to the 'dev' branch
+
+jobs:
+  # Job 1: Frontend (React)
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'  # Set Node.js version to 22
+
+      - name: Install dependencies (frontend)
+        working-directory: frontend
+        run: |
+          npm install
+
+      # Step to add secrets to .env file
+      - name: Set up frontend environment variables
+        run: |
+          echo "REACT_APP_SITE_KEY=${{ secrets.REACT_APP_SITE_KEY }}" >> frontend/.env
+          echo "REACT_APP_SITE_SECRET=${{ secrets.REACT_APP_SITE_SECRET }}" >> frontend/.env
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: |
+          npm run test -- --watchAll=false --ci --reporters=default --testTimeout=30000
+
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm run build
+
+  # Job 2: Backend (Spring Boot)
+  backend:
+    runs-on: ubuntu-latest
+    needs: frontend  # Run this job after the frontend job completes
+
+    services:
+      db:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testdb
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'  # Use the appropriate Java version
+
+      # Set environment variables for DB connection and email (optional)
+      - name: Set environment variables
+        run: |
+          echo "db_password=root" >> $GITHUB_ENV
+          echo "db_user_name=root" >> $GITHUB_ENV
+          echo "email=${{ secrets.EMAIL }}" >> $GITHUB_ENV
+          echo "email_psw=${{ secrets.EMAIL_PSW }}" >> $GITHUB_ENV
+
+      # Step to wait for MySQL to be ready
+      - name: Wait for MySQL
+        run: |
+          for i in {1..10}; do
+            if mysqladmin ping -h 127.0.0.1 -u root -proot > /dev/null 2>&1; then
+              echo "MySQL is up and running!"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 5
+          done
+
+      # Step to configure application.properties for DB connection
+      - name: Configure application.properties
+        run: |
+          echo "spring.datasource.url=jdbc:mysql://localhost:3306/testdb" > src/main/resources/application.properties
+          echo "spring.datasource.username=root" >> src/main/resources/application.properties
+          echo "spring.datasource.password=root" >> src/main/resources/application.properties
+          echo "spring.jpa.hibernate.ddl-auto=update" >> src/main/resources/application.properties
+
+      # Build backend (Spring Boot)
+      - name: Build backend (Spring Boot)
+        working-directory: server
+        run: |
+          ./mvnw clean install
+
+      # Run backend tests
+      - name: Run backend tests
+        working-directory: server
+        run: |
+          ./mvnw test
