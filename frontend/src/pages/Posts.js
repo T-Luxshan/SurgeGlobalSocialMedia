@@ -9,7 +9,6 @@ import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 
-// import posts from "../Data/Posts";
 import { getAllPosts } from "../Services/PostService";
 
 
@@ -30,9 +29,6 @@ const PostsPage = () => {
   const fetchAllPosts = async () => {
     try {
       const response = await getAllPosts(); // Assuming you have a function to get user details
-      // setUser(response.data);
-      // setPreview(response.data.profileUri);
-      // setName(response.data.name);
       setPosts(response.data);
       console.log(response.data);
     } catch (error) {

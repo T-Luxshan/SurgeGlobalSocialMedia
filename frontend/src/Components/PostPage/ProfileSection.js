@@ -72,7 +72,7 @@ const ProfileSection = () => {
       setPreview(response.data.profileUri);
       setName(response.data.name);
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.log("Error fetching user details:", error);
     }
   };
 
@@ -110,18 +110,18 @@ const ProfileSection = () => {
           return getDownloadURL(imgRef);
         })
         .then((url) => {
-          setPreview(url); // Update profile URL state
-          saveToDB(url); // Save to database
+          setPreview(url); 
+          saveToDB(url); 
           setIsLoading(false);
           handleClose(); 
         })
         .catch((error) => {
-          console.error("Error uploading profile:", error);
-          setIsLoading(false); // Ensure to stop the spinner if there's an error
+          console.log("Error uploading profile:", error);
+          setIsLoading(false); 
         });
     } else {
-      setIsLoading(false); // Stop the spinner if no preview is provided
-      handleClose(); // Close the dialog if no image is uploaded
+      setIsLoading(false); 
+      handleClose(); 
     }
   };
 
@@ -130,14 +130,14 @@ const ProfileSection = () => {
     const deleteRef = ref(storage, preview);
     try {
       deleteObject(deleteRef).then(() => {
-        // onProfileChange(null);
+        
         setInterval(() => {
           setIsLoading(false);
         }, 2000);
       });
       deleteFromDB();
       setPreview(null);
-      // setProfile(null);
+      
     } catch (error) {
       setIsLoading(true);
       setInterval(() => {
@@ -219,7 +219,7 @@ const ProfileSection = () => {
           >
             <Avatar
               alt="Profile Image"
-              src={preview} // Add a default profile image
+              src={preview} 
               sx={{
                 height: "100px",
                 width: "100px",
