@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ../../../Downloads/SurgeGlobalSocialMedia-dev/frontend  # Path to your ReactJS folder containing Dockerfile
+    ports:
+      - "3000:3000"       # Map ReactJS port to the host
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ../../../Downloads/SurgeGlobalSocialMedia-dev/server  # Path to your backend folder containing Dockerfile
+    ports:
+      - "8080:8080"       # Map backend port to the host
+    environment:
+      - MYSQL_DATABASE=test
+      - MYSQL_ROOT_PASSWORD=root
+    depends_on:
+      - mysqldb          # Ensure backend starts after the database
+    networks:
+      - app-network
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysql-container
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_DATABASE=test
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin-container
+    depends_on:
+      - mysqldb          # Ensure phpMyAdmin starts after the database
+    ports:
+      - "8081:80"        # Access phpMyAdmin via http://localhost:8081
+    environment:
+      PMA_HOST: mysqldb  # Host of MySQL service
+      PMA_USER: root     # MySQL root username
+      PMA_PASSWORD: root # MySQL root password
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
