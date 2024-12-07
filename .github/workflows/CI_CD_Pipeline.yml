@@ -71,6 +71,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Use the appropriate Java version
+          distribution: 'temurin'
 
       # Set environment variables for DB connection and email (optional)
       - name: Set environment variables
