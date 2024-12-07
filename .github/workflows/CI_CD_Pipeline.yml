@@ -108,6 +108,11 @@ jobs:
                 ddl-auto: update
           " > src/main/resources/application.yml
 
+    # Step to grant execute permissions for mvnw
+      - name: Grant execute permission to mvnw
+        working-directory: server
+        run: chmod +x ./mvnw
+        
       # Build backend (Spring Boot)
       - name: Build backend (Spring Boot)
         working-directory: server
