@@ -9,3 +9,7 @@ export const getUserDetails = () => {
 export const updateUserName = (name) => {
     return axiosAuthInstance.patch(`${BASE_URL_USER}`,{name});
 }
+
+export const getUserDetailsById = (email) => {
+    return axiosAuthInstance.get(`${BASE_URL_USER}/${email}`);
+  };
