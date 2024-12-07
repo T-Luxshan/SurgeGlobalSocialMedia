@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import { Container, Divider, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -9,73 +9,97 @@ import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 
+// import posts from "../Data/Posts";
 import { getAllPosts } from "../Services/PostService";
+import { getUserDetails } from "../Services/UserService";
 
-
+import UserContext from "../Contexts/UserContext";
 
 const PostsPage = () => {
-
   const [posts, setPosts] = React.useState([]);
+  const [user, setUser] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [name, setName] = useState("");
+
   const navigate = useNavigate();
 
-
-
-  React.useEffect(()=>{
+  React.useEffect(() => {
     fetchAllPosts();
-  }, [])
+    fetchUserDetails();
+  }, [name]);
 
-
-
+  console.log("Posts", posts);
   const fetchAllPosts = async () => {
     try {
-      const response = await getAllPosts(); // Assuming you have a function to get user details
+      const response = await getAllPosts();
       setPosts(response.data);
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
   };
-  
-  const arr = [0, 1, 2, 3];
-  console.log("lucky",posts);
+  const fetchUserDetails = async () => {
+    try {
+      const response = await getUserDetails(); // Assuming you have a function to get user details
+      setUser(response.data);
+      setPreview(response.data.profileUri);
+      setName(response.data.name);
+      console.log("LEHHH", response.data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+  console.log("LEHHHUse", user);
+  const email = user?.email;
 
   const handleLogOut = () => {
     document.cookie = `accessToken=; path=/;`;
     document.cookie = `refreshToken=; path=/;`;
-    navigate("/")
+    navigate("/");
     console.log("Logging out");
   };
   return (
     <div>
-      <Container maxWidth={"xl"} sx={{}}>
-        <Grid2 container>
-          <Grid2 size={{ lg: 2.5, md: 2.5 }}>
-            <Box sx={{ p: 2 }}>
-              <Typography variant={"h4"} color={"primary.main"}>
-                Surge
-                <Typography variant={"body2"} component={"span"}>
-                  {" "}
-                  Global
+      <UserContext.Provider
+        value={{
+          user,
+          email,
+          setUser,
+          preview,
+          setPreview,
+          name,
+          setName,
+        }}
+      >
+        <Container maxWidth={"xl"} sx={{}}>
+          <Grid2 container>
+            <Grid2 size={{ lg: 2.5, md: 2.5 }}>
+              <Box sx={{ p: 2 }}>
+                <Typography variant={"h4"} color={"primary.main"}>
+                  Surge
+                  <Typography variant={"body2"} component={"span"}>
+                    {" "}
+                    Global
+                  </Typography>
                 </Typography>
-              </Typography>
-            </Box>
-          </Grid2>
-          <Grid2 size={{ lg: 7, md: 7 }}>
-            <Box
-              sx={{
-                overflowY: "scroll",
-                height: "100vh",
-              }}
-            >
-              {posts.map((post) => (
-                <>
-                  <PostCard key={post.id} post={post} />
-                  <Divider sx={{ mx: "20px" }} />
-                </>
-              ))}
-            </Box>
-          </Grid2>
-          <Grid2
+              </Box>
+            </Grid2>
+            <Grid2 size={{ lg: 7, md: 7 }}>
+              <Box
+                sx={{
+                  overflowY: "scroll",
+                  height: "100vh",
+                }}
+              >
+                {posts.map((post) => (
+                  <>
+                    <PostCard key={post.postId} post={post} />
+                    <Divider sx={{ mx: "20px" }} />
+                  </>
+                ))}
+              </Box>
+            </Grid2>
+            <Grid2
               size={{ lg: 2.5, md: 2.5 }}
               sx={{
                 display: "flex",
@@ -106,6 +130,7 @@ const PostsPage = () => {
                       textTransform: "inherit",
                       fontSize: "15px",
                       fontWeight: 600,
+                      backgroundColor: "inherit",
                     }}
                     onClick={handleLogOut}
                   >
@@ -114,8 +139,9 @@ const PostsPage = () => {
                 </Box>
               </Stack>
             </Grid2>
-        </Grid2>
-      </Container>
+          </Grid2>
+        </Container>
+      </UserContext.Provider>
     </div>
   );
 };

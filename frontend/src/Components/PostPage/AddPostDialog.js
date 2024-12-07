@@ -56,7 +56,7 @@ const AddPostDialog = (props) => {
         .catch(err=>console.log("Failed"));
       })
       .catch((error) => {
-        console.log("Error uploading file:", error);
+        console.error("Error uploading file:", error);
         setIsLoading(false);
       });
       setIsLoading(false);
