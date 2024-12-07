@@ -36,6 +36,9 @@ const PostsPage = () => {
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
+      document.cookie = `accessToken=; path=/;`;
+      document.cookie = `refreshToken=; path=/;`;
+      navigate("/");
     }
   };
   const fetchUserDetails = async () => {
@@ -49,7 +52,7 @@ const PostsPage = () => {
       console.error("Error fetching user details:", error);
     }
   };
-  console.log("LEHHHUse", user);
+
   const email = user?.email;
 
   const handleLogOut = () => {
@@ -84,11 +87,15 @@ const PostsPage = () => {
                 </Typography>
               </Box>
             </Grid2>
-            <Grid2 size={{ lg: 7, md: 7 }}>
+            <Grid2 size={{ lg: 7, md: 7 }} sx={{ boxShadow: 15 }}>
               <Box
                 sx={{
                   overflowY: "scroll",
                   height: "100vh",
+                  scrollbarWidth: "none",
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
                 }}
               >
                 {posts.map((post) => (
