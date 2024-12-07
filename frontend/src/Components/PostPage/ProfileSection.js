@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import { Badge, IconButton, Stack } from "@mui/material";
@@ -27,25 +27,28 @@ import { addProfilePhoto, deletePhoto } from "../../Services/ProfileService";
 import { extractUsername } from "../../Functions/UsernameExtract";
 import AddPostDialog from "./AddPostDialog";
 import EditNameDialog from "./EditNameDialog";
+import userContext from "../../Contexts/UserContext";
+import UserContext from "../../Contexts/UserContext";
 
 const ProfileSection = () => {
   const [openPostDialog, setOpenPostDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
+  // const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [preview, setPreview] = useState(null);
-  const [user, setUser] = useState(null);
+  // const [preview, setPreview] = useState(null);
+  // const [user, setUser] = useState(null);
   const [profile, setProfile] = useState("");
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-
-  
-
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
+  const { user, setName, preview, setPreview } = useContext(UserContext);
+  console.log("Profile", user);
+  const profileUri = user?.profileUri;
+  console.log("ProfileURL", profileUri);
+  // useEffect(() => {
+  //   fetchUserDetails();
+  // }, []);
 
   const handleOpenPostDialog = () => {
     setOpenPostDialog(true);
@@ -65,16 +68,16 @@ const ProfileSection = () => {
 
   // const username = extractUsername(user?.email);
 
-  const fetchUserDetails = async () => {
-    try {
-      const response = await getUserDetails(); // Assuming you have a function to get user details
-      setUser(response.data);
-      setPreview(response.data.profileUri);
-      setName(response.data.name);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
-  };
+  // const fetchUserDetails = async () => {
+  //   try {
+  //     const response = await getUserDetails(); // Assuming you have a function to get user details
+  //     setUser(response.data);
+  //     setPreview(response.data.profileUri);
+  //     setName(response.data.name);
+  //   } catch (error) {
+  //     console.error("Error fetching user details:", error);
+  //   }
+  // };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -113,7 +116,8 @@ const ProfileSection = () => {
           setPreview(url); // Update profile URL state
           saveToDB(url); // Save to database
           setIsLoading(false);
-          handleClose(); 
+          handleClose();
+          console.error("uploading profile:", url);
         })
         .catch((error) => {
           console.error("Error uploading profile:", error);
