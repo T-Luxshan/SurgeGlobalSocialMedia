@@ -14,7 +14,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { register } from "../Services/AuthService";
-import { useNavigate } from "react-router-dom";
 
 
 const SignUp = () => {
