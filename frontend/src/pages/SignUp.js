@@ -14,6 +14,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { register } from "../Services/AuthService";
+import { useNavigate } from "react-router-dom";
+
 
 const SignUp = () => {
   const [logError, setLogError] = useState("");
@@ -94,7 +96,9 @@ const SignUp = () => {
 
           document.cookie = `accessToken=${res.data.accessToken}; path=/;`;
           document.cookie = `refreshToken=${res.data.refreshToken}; path=/;`;
-          // TODO: token handle and navigate.
+          
+          navigate("/post");
+
         })
         .catch((e) => {
           console.log("Registration failed.");
