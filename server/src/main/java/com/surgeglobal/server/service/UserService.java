@@ -40,13 +40,26 @@ public class UserService {
 
     }
 
-    public UserDTO getUserFromEmailId(String email) {
+    public UserDetailDTO getUserFromEmailId(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found for this email"));
 
-        return UserDTO.builder()
+        ProfileImage profileImage = profileImageRepository.findByUser(user);
+
+        if(profileImage == null) {
+            return UserDetailDTO.builder()
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .profileUri(null)
+                    .build();
+        }
+
+        return UserDetailDTO.builder()
                 .name(user.getName())
+                .email(user.getEmail())
+                .profileUri(profileImage.getProfileUri())
                 .build();
+
     }
 
     public Boolean checkUserFound(String email) {
