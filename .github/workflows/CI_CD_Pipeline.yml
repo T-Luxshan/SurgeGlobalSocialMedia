@@ -44,7 +44,7 @@ jobs:
         run: |
           npm run build
 
-  # Job 2: Backend (Spring Boot)
+   # Job 2: Backend (Spring Boot)
   backend:
     runs-on: ubuntu-latest
     needs: frontend  # Run this job after the frontend job completes
@@ -93,13 +93,20 @@ jobs:
             sleep 5
           done
 
-      # Step to configure application.properties for DB connection
-      - name: Configure application.properties
+      # Step to configure application.yml for DB connection
+      - name: Configure application.yml
+        working-directory: server  # Adjust path if needed
         run: |
-          echo "spring.datasource.url=jdbc:mysql://localhost:3306/testdb" > src/main/resources/application.properties
-          echo "spring.datasource.username=root" >> src/main/resources/application.properties
-          echo "spring.datasource.password=root" >> src/main/resources/application.properties
-          echo "spring.jpa.hibernate.ddl-auto=update" >> src/main/resources/application.properties
+          echo "
+          spring:
+            datasource:
+              url: jdbc:mysql://localhost:3306/testdb
+              username: root
+              password: root
+            jpa:
+              hibernate:
+                ddl-auto: update
+          " > src/main/resources/application.yml
 
       # Build backend (Spring Boot)
       - name: Build backend (Spring Boot)
