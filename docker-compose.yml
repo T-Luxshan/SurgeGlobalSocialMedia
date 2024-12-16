@@ -3,7 +3,7 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ../../../Downloads/SurgeGlobalSocialMedia-dev/frontend  # Path to your ReactJS folder containing Dockerfile
+      context: ./frontend  # Path to your ReactJS folder containing Dockerfile
     ports:
       - "3000:3000"       # Map ReactJS port to the host
     networks:
@@ -11,7 +11,7 @@ services:
 
   backend:
     build:
-      context: ../../../Downloads/SurgeGlobalSocialMedia-dev/server  # Path to your backend folder containing Dockerfile
+      context: ./server  # Path to your backend folder containing Dockerfile
     ports:
       - "8080:8080"       # Map backend port to the host
     environment:

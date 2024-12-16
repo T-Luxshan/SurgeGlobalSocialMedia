@@ -13,11 +13,6 @@ import ChangePassword from "./pages/ChangePassword";
 // export const ThemeContext = createContext(null);
 
 function App() {
-  // const [theme, setTheme] = useState("light");
-  //
-  // const toggleTheme = () => {
-  //   setTheme((curr) => (curr === "light" ? "dark" : "light"));
-  // };
 
   return (
     <ThemeProvider theme={theme}>

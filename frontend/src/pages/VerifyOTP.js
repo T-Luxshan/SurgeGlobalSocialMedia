@@ -25,6 +25,13 @@ const VerifyOTP = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+
+  React.useEffect(() => {
+    if (!email) {
+      navigate("/"); 
+    }
+  }, [email, navigate]);
+
   const handleOTP = async () => {
     console.log(email);
     verifyOTP(OTP, email)

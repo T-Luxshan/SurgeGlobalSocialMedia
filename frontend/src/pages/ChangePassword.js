@@ -50,13 +50,19 @@ const ChangePassword = () => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+  React.useEffect(() => {
+    if (!email) {
+      navigate("/"); 
+    }
+  }, [email, navigate]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     // setOpen(false);
-    navigate('/login');
+    navigate('/');
   };
  
   const handleChangePassword = async (data) => {
