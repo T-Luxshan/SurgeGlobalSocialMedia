@@ -121,7 +121,7 @@ const Login = () => {
               color="black"
               sx={{ fontWeight: "bold", textAlign: "left" }}
             >
-              Surge SE Internship
+              LinkNest 
             </Typography>
             <Typography
               variant="h5"
@@ -129,16 +129,16 @@ const Login = () => {
               color="black"
               sx={{ textAlign: "left", mt: 1 }}
             >
-              January 2025
+              Let's Gather Around, Folks
             </Typography>
-            <Typography
+            {/* <Typography
               variant="h4"
               component="div"
               color="black"
               sx={{ fontWeight: "bold", textAlign: "left", mt: 5 }}
             >
               Luxshan Thuraisingam
-            </Typography>
+            </Typography> */}
           </Box>
         </Grid2>
 

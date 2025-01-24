@@ -78,11 +78,11 @@ const PostsPage = () => {
             <Grid2 size={{ lg: 2.5, md: 2.5 }}>
               <Box sx={{ p: 2 }}>
                 <Typography variant={"h4"} color={"primary.main"}>
-                  Surge
-                  <Typography variant={"body2"} component={"span"}>
+                LinkNest
+                  {/* <Typography variant={"body2"} component={"span"}>
                     {" "}
                     Global
-                  </Typography>
+                  </Typography> */}
                 </Typography>
               </Box>
             </Grid2>
