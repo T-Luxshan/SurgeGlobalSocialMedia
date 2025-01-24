@@ -43,11 +43,10 @@ const PostsPage = () => {
   };
   const fetchUserDetails = async () => {
     try {
-      const response = await getUserDetails(); // Assuming you have a function to get user details
+      const response = await getUserDetails(); 
       setUser(response.data);
       setPreview(response.data.profileUri);
       setName(response.data.name);
-      console.log("LEHHH", response.data);
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
@@ -79,11 +78,11 @@ const PostsPage = () => {
             <Grid2 size={{ lg: 2.5, md: 2.5 }}>
               <Box sx={{ p: 2 }}>
                 <Typography variant={"h4"} color={"primary.main"}>
-                  Surge
-                  <Typography variant={"body2"} component={"span"}>
+                LinkNest
+                  {/* <Typography variant={"body2"} component={"span"}>
                     {" "}
                     Global
-                  </Typography>
+                  </Typography> */}
                 </Typography>
               </Box>
             </Grid2>
@@ -98,7 +97,7 @@ const PostsPage = () => {
                   },
                 }}
               >
-                {posts.map((post) => (
+                {posts.slice().reverse().map((post) => (
                   <>
                     <PostCard key={post.postId} post={post} />
                     <Divider sx={{ mx: "20px" }} />

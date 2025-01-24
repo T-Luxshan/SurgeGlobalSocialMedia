@@ -16,3 +16,10 @@ RUN npm run build
 EXPOSE 3000
 
 CMD ["npm", "start"]
+
+
+# .dockerignore File shouldbe created, 
+# .env
+# node_modules
+
+# docker run -p 3000:3000 --name surge-react-app --env-file .env surge_frontend

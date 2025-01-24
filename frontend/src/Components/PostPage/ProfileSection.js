@@ -66,18 +66,7 @@ const ProfileSection = () => {
     setOpenEditDialog(false);
   };
 
-  // const username = extractUsername(user?.email);
-
-  // const fetchUserDetails = async () => {
-  //   try {
-  //     const response = await getUserDetails(); // Assuming you have a function to get user details
-  //     setUser(response.data);
-  //     setPreview(response.data.profileUri);
-  //     setName(response.data.name);
-  //   } catch (error) {
-  //     console.error("Error fetching user details:", error);
-  //   }
-  // };
+  
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -121,11 +110,11 @@ const ProfileSection = () => {
         })
         .catch((error) => {
           console.error("Error uploading profile:", error);
-          setIsLoading(false); // Ensure to stop the spinner if there's an error
+          setIsLoading(false); 
         });
     } else {
-      setIsLoading(false); // Stop the spinner if no preview is provided
-      handleClose(); // Close the dialog if no image is uploaded
+      setIsLoading(false); 
+      handleClose(); 
     }
   };
 

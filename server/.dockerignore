@@ -1,0 +1,18 @@
+# Ignore Maven and Gradle directories
+*.iml
+.idea/
+*.log
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore configuration files that may contain sensitive information
+.env
+
+# Ignore version control files and directories
+.git/
+.gitignore
+
+
+.vscode/
